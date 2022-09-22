@@ -15,4 +15,6 @@ class GenresViews(Resource):
 class GenreViews(Resource):
     def get(self, gid):
         genre = genre_service.get_by_id(gid)
+        if not genre:
+            return '', 404
         return genre_schema.dump(genre), 200
