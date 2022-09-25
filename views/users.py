@@ -1,6 +1,7 @@
 from flask import request, abort
 from flask_restx import Resource, Namespace
 from marshmallow.exceptions import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 from implemented import user_service, user_schema
 from auth.auth import admin_required
@@ -23,6 +24,8 @@ class UsersViews(Resource):
             user_added = user_service.create(user_data)
         except ValidationError:
             abort(400)
+        except IntegrityError:
+            return {'message': 'user already exists'}, 400
 
         return '', 201, {'location': f'/users/{user_added.id}'}
 
