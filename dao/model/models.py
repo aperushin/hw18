@@ -28,6 +28,14 @@ class Movie(db.Model):
     director = db.relationship(Director)
 
 
+class User(db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String)
+    password = db.Column(db.String)
+    role = db.Column(db.String)
+
+
 class DirectorSchema(Schema):
     id = fields.Integer(dump_only=True)
     name = fields.String()
@@ -49,3 +57,10 @@ class MovieSchema(Schema):
     genre = fields.Pluck(GenreSchema, 'name')
     director_id = fields.Integer()
     director = fields.Pluck(DirectorSchema, 'name')
+
+
+class UserSchema(Schema):
+    id = fields.Integer(dump_only=True)
+    username = fields.String()
+    password = fields.String()
+    role = fields.String()

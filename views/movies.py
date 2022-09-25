@@ -1,13 +1,16 @@
 from flask import request
 from flask_restx import Resource, Namespace
-from implemented import movie_service, movie_schema
 from marshmallow.exceptions import ValidationError
+
+from implemented import movie_service, movie_schema
+from auth.auth import admin_required, auth_required
 
 movie_ns = Namespace('movies')
 
 
 @movie_ns.route('/')
 class MoviesViews(Resource):
+    @auth_required
     def get(self):
         filters = request.args.to_dict()
 
@@ -18,6 +21,7 @@ class MoviesViews(Resource):
 
         return movie_schema.dump(all_movies, many=True), 200
 
+    @admin_required
     def post(self):
         movie_data = request.json
 
@@ -31,12 +35,14 @@ class MoviesViews(Resource):
 
 @movie_ns.route('/<int:mid>')
 class MovieViews(Resource):
+    @auth_required
     def get(self, mid):
         movie = movie_service.get_by_id(mid)
         if not movie:
             return '', 404
         return movie_schema.dump(movie), 200
 
+    @admin_required
     def put(self, mid):
         movie_data = request.json
 
@@ -50,6 +56,7 @@ class MovieViews(Resource):
 
         return '', 204
 
+    @admin_required
     def delete(self, mid):
         result = movie_service.delete(mid)
         if not result:
