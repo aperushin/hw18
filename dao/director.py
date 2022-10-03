@@ -9,7 +9,7 @@ class DirectorDAO:
         query = self.session.query(Director)
         return query.all()
 
-    def get_by_id(self, did: int) -> Director:
+    def get_by_id(self, did: int) -> Director | None:
         query = self.session.query(Director)
         return query.get(did)
 
@@ -18,7 +18,7 @@ class DirectorDAO:
         self.session.commit()
         return director
 
-    def update(self, did: int, director_data: dict):
+    def update(self, did: int, director_data: dict) -> None:
         self.session.query(Director).filter_by(id=did).update(director_data)
         self.session.commit()
 
